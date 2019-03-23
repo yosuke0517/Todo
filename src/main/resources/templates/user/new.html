@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>createUser</title>
+    <meta charset="utf-8" />
+</head>
+<body>
+<h1 th:text="User作成画面"></h1>
+<form th:action = "@{/user/create}" th:object = "${userForm}" method="post">
+    <div class="form-group" th:classappend="${#fields.hasErrors('name')}? 'has-error'">
+    <label for="name" class="control-label">名前</label>
+    <input id="name" type="text" class="form-control" th:field="*{name}" name="name">
+    <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error-massages">error!</span>
+    </div>
+    <div class="form-group" th:classappend="${#fields.hasErrors('email')}? 'has-error'">
+        <label for="email" class="control-label">email</label>
+        <input id="email" type="text" class="form-control" th:field="*{email}" name="email">
+        <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error-massages">error!</span>
+    </div>
+    <div class="form-group" th:classappend="${#fields.hasErrors('password')}? 'has-error'">
+        <label for="password" class="control-label">password</label>
+        <input id="password" type="password" class="form-control" th:field="*{password}" name="password">
+        <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error-massages">error!</span>
+    </div>
+    <div class="form-group" th:classappend="${#fields.hasErrors('passwordConfirm')}? 'has-error'">
+        <label for="password" class="control-label">password(確認)</label>
+        <input id="passwordConfirm" type="password" class="form-control" th:field="*{passwordConfirm}" name="passwordConfirm">
+        <span th:if="${#fields.hasErrors('passwordConfirm')}" th:errors="*{passwordConfirm}" class="error-massages">error!</span>
+    </div>
+    <input type="submit" class="btn btn-default" value="新規登録"/>
+</form>
+</body>
+</html>

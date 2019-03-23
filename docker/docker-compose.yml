@@ -1,0 +1,21 @@
+version: '3'
+services:
+    mysql:
+        build: ./mysql
+        environment:
+            - MYSQL_DATABASE=demo
+            - MYSQL_ROOT_USER=root
+            - MYSQL_ROOT_PASSWORD=p@ssw0rd
+            - TZ=Japan
+        volumes:
+            - ./initdb.d:/docker-entrypoint-initdb.d
+            - ./dbdata:/var/lib/mysql
+        ports:
+            - "3306:3306"
+
+
+#上のパスは2つに別れています。
+    #./initdb.dと/docker-entrypoint-initdb.dです。
+    #区切りには : を用います。
+    #:の左側がホストマシン側で右がコンテナ側のパスです。
+    #意味はホストマシンの docker-compose.yml と同じ階層の ./initdb.d ディレクトリをDocker Containerの中では /docker-entrypoint-initdb.d として扱う です。
