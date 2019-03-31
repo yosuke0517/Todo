@@ -1,13 +1,17 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layouts/sidebarLayout}">
 <head>
     <title>Springboot</title>
-    <meta charset="utf-8" />
 </head>
 <body>
-<div>
+<div layout:fragment="sidebar">
+    <div th:replace="~{layouts/sidebar :: sidebar ('user', 'user')}"></div>
 </div>
-<p th:text="${msg}"></p>
-<p th:text="#{login.success}"></p>
+<div layout:fragment="content">
+    <p th:text="${msg}"></p>
+</div>
 </body>
 </html>

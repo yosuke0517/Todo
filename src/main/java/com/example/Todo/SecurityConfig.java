@@ -2,7 +2,9 @@ package com.example.Todo;
 
 import com.example.Todo.common.security.DefaultAccessDeniedHandler;
 import com.example.Todo.common.security.DefaultAuthenticationEntryPoint;
+import com.example.Todo.common.utils.RequestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -16,6 +18,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.sql.DataSource;
 
@@ -25,6 +29,9 @@ import static com.example.Todo.common.WebConst.*;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Value("${application.security.rememberMe.cookieName:rememberMe}")
+    String rememberMeCookieName;
 
     @Autowired
     DataSource dataSource;
@@ -37,15 +44,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    //リメンバーミーキー（固定でいいらしい&なんでもいいらしい）
+    private static final String REMEMBER_ME_KEY = "sampleRememberMeKey";
 
-    /**
-     * 静的ファイルには認証をかけない
-     * @param web
-     * @throws Exception
-     */
+
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/favicon.ico", "/css/**", "/js/**", "/images/**", "/fonts/**", "/shutdown" /* for Demo */);
+        // 静的ファイルへのアクセスは認証をかけない
+        web.ignoring()//
+                .antMatchers(WEBJARS_URL, STATIC_RESOURCES_URL);
     }
 
     /**
@@ -63,6 +70,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers("/loginForm").permitAll()
+                .antMatchers("/loginFailure").permitAll()
                 .antMatchers("/user/**").permitAll()
                 .antMatchers("/new").permitAll()//test用(ユーザ登録)
                 .antMatchers("/index").permitAll()//test用(ユーザ登録後の遷移画面）
@@ -76,13 +84,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.formLogin()
                 .loginPage("/loginForm")
                 .loginProcessingUrl("/login")
-                .failureUrl("/login?error")
+                .failureUrl("/loginFailure")
                 .successForwardUrl("/success")
                 .usernameParameter("email")
                 .passwordParameter("password");
-        http.logout()
-                .logoutUrl("/logout**")
-                .logoutSuccessUrl("/login");
+        // ログアウト設定
+        http.logout()//
+                .logoutRequestMatcher(new AntPathRequestMatcher(LOGOUT_URL))
+                // Cookieを破棄する
+                .deleteCookies("SESSION", "JSESSIONID", rememberMeCookieName)
+                // ログアウト画面のURL
+                .logoutUrl(LOGOUT_URL)
+                // ログアウト後の遷移先
+                .logoutSuccessUrl(LOGOUT_SUCCESS_URL)
+                // ajaxの場合は、HTTPステータスを返す
+                .defaultLogoutSuccessHandlerFor(new HttpStatusReturningLogoutSuccessHandler(),
+                        RequestUtils::isAjaxRequest)
+                // セッションを破棄する
+                .invalidateHttpSession(true).permitAll();
+
+        // RememberMeとりあえず放置
+        //http.rememberMe().key(REMEMBER_ME_KEY)//
+          //      .rememberMeServices(multiDeviceRememberMeServices());
+
     }
 
 
@@ -93,7 +117,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public AuthenticationEntryPoint authenticationEntryPoint() {
-        return new DefaultAuthenticationEntryPoint("/login", LOGIN_TIMEOUT_URL);
+        // APIがアクセス拒否された時の例外を返す
+        //認証に失敗し403を返す時にリダイレクトしたりできる。
+        return new DefaultAuthenticationEntryPoint("/loginForm", LOGIN_TIMEOUT_URL);
     }
 
 

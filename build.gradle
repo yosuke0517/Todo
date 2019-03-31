@@ -20,38 +20,44 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-    compileOnly 'org.projectlombok:lombok'
-    runtimeOnly 'mysql:mysql-connector-java'
-    annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-jdbc"
+    compileOnly "org.projectlombok:lombok"
+    runtimeOnly "mysql:mysql-connector-java"
+    annotationProcessor "org.projectlombok:lombok"
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+
 
     //バリデーション
     compile "org.springframework.boot:spring-boot-starter-validation"
-    runtimeOnly 'org.springframework.boot:spring-boot-devtools'
+    runtimeOnly "org.springframework.boot:spring-boot-devtools"
     annotationProcessor "org.seasar.doma.boot:doma-spring-boot-starter:1.1.1"
 
     //doma
     compile("org.seasar.doma.boot:doma-spring-boot-starter:1.1.1") {
         exclude group: "org.springframework.boot"
     }
-    compile 'org.apache.commons:commons-lang3'
+    compile "org.apache.commons:commons-lang3"
     //spring security
-    compile 'org.springframework.boot:spring-boot-starter-security'
+    compile "org.springframework.boot:spring-boot-starter-security"
     // thymeleaf(ロール/権限によるthymeleafのテンプレートの制御)
     compile "org.thymeleaf.extras:thymeleaf-extras-springsecurity5"
-    // modelmapper
+    // model mapper
     compile "org.modelmapper:modelmapper:0.7.5"
-    
     //webjars
-    compile "org.webjars:jquery:3.1.1"
     compile "org.webjars:bootstrap:4.0.0"
-            
-
+    compile "org.webjars:jquery:3.1.1"
+    compile "org.webjars:font-awesome:4.7.0"
+    compile "org.webjars:ionicons:4.5.5"
+    //thymeleaf
+    compile "nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:2.3.0"
 }
+//■Doma■
+// ideaプラグインを追加
 apply plugin: 'idea'
-idaa.module.inheritOutputDirs = true
+//バージョンの組み合わせによって必要らしい設定(inheritOutputDirsを有効(true)にしないと、うまく動かない)
+idea.module.inheritOutputDirs = true
+//Domaが扱うSQLファイルをコンパイルより前に出力先ディレクトリにコピーする
 processResources.destinationDir = compileJava.destinationDir
 compileJava.dependsOn processResources

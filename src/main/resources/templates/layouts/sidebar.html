@@ -1,0 +1,42 @@
+<!--部品で使う予定-->
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<body>
+<!--sidebar_start-->
+<div class="bg-light border-right sidebar-heading" th:fragment="sidebar (category, item)">
+    <div class="sidebar-heading">Start Bootstrap</div>
+    <div class="list-group list-group-flush">
+        <ul class="nav flex-column">
+            <li class="nav-item" th:class="|treeview ${category=='user' ? 'active' : ''}|">
+                <div class="d-flex align-items-center">
+                    <a href="#" class="nav-link"> 顧客管理 </a>
+                    <button class="btn btn-link btn-sm" data-target="#collapse-menu3" data-toggle="collapse">
+                        <i class="fa fa-arrow-down" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <ul id="collapse-menu3" class="collapse list-unstyled pl-3">
+                    <li th:class="${item=='user' ? 'active' : ''}"><a href="#" th:href="@{/users/users/find(page=1)}"><i class="fa fa-user-o"></i>顧客マスタ</a></li>
+                </ul>
+            </li>
+            <li class="nav-item" th:class="|treeview ${category=='system' ? 'active' : ''}|">
+                <div class="d-flex align-items-center">
+                    <a href="#" class="nav-link">システム設定 </a>
+                    <button class="btn btn-link btn-sm" data-target="#collapse-menu4" data-toggle="collapse">
+                        <i class="fa fa-arrow-down" aria-hidden="true">
+                        </i></button>
+                </div>
+                <ul id="collapse-menu4"  class="collapse list-unstyled pl-3">
+                    <li th:class="${item=='staff' ? 'active' : ''}"><a href="#" th:href="@{/system/staffs/find(page=1)}"><i class="fa fa-user-o"></i>担当者マスタ</a></li>
+                    <li th:class="${item=='holiday' ? 'active' : ''}"><a href="#" th:href="@{/system/holidays/find(page=1)}"><i class="fa fa-circle-o"></i>祝日マスタ</a></li>
+                    <li th:class="${item=='mailTemplate' ? 'active' : ''}"><a href="#" th:href="@{/system/mailtemplates/find(page=1)}"><i class="fa fa-envelope"></i>メールテンプレート</a></li>
+                    <li th:class="${item=='uploadfile' ? 'active' : ''}"><a href="#" th:href="@{/system/uploadfiles/list}"><i class="fa fa-file"></i>ファイル管理</a></li>
+                    <li th:class="${item=='role' ? 'active' : ''}"><a href="#" th:href="@{/system/roles/find(page=1)}"><i class="fa fa-circle-o"></i>ロール管理</a></li>
+                    <li th:class="${item=='codeCategory' ? 'active' : ''}"><a href="#" th:href="@{/system/code_categories/find(page=1)}"><i class="fa fa-th-list"></i>コード分類マスタ</a></li>
+                    <li th:class="${item=='code' ? 'active' : ''}"><a href="#" th:href="@{/system/codes/find(page=1)}"><i class="fa fa-th-list"></i>コードマスタ</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

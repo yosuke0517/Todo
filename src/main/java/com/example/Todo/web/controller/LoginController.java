@@ -38,6 +38,11 @@ public class LoginController extends AbstractHtmlController {
         return "login/login";
     }
 
+    @RequestMapping("/")
+    public String index(Model model){
+        return "login/success";
+    }
+
     /**
      * 入力チェック
      *
@@ -61,10 +66,32 @@ public class LoginController extends AbstractHtmlController {
      * ログイン成功
      */
     @PostMapping("/success")
-    public String loginsuccess(@ModelAttribute LoginForm loginForm, Model model,RedirectAttributes redirectAttributes){
-        model.addAttribute("msg","loginSuccess");
-        return "/login/success";
+    public String loginsuccess(@ModelAttribute LoginForm loginForm, RedirectAttributes redirectAttributes){
+        redirectAttributes.addFlashAttribute(GLOBAL_MESSAGE, getMessage("login.success"));
+
+        return "redirect:/";
     }
 
+    /**
+     * ログイン失敗
+     */
+    @GetMapping("/loginFailure")
+    public String loginFailure(@ModelAttribute LoginForm loginForm,Model model){
+        model.addAttribute(GLOBAL_MESSAGE,getMessage("login.failed"));
+        return "/login/login";
+    }
+
+    /**
+     * ログアウト成功
+     */
+    @GetMapping("/logoutSuccess")
+    public String logout(@ModelAttribute LoginForm loginForm, Model model,RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute(GLOBAL_MESSAGE, getMessage("logout.success"));
+        /*
+        20190309
+        ログアウト処理が成功したら本メソッドで受け取る
+         */
+        return "redirect:/login";
+    }
 
 }

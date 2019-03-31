@@ -6,7 +6,6 @@ import com.example.Todo.domain.dao.UserRoleDao;
 import com.example.Todo.domain.dto.User;
 import com.example.Todo.domain.dto.UserRole;
 import lombok.extern.slf4j.Slf4j;
-import org.seasar.doma.jdbc.NoResultException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -60,13 +59,20 @@ public class UserDaoRealm extends BaseRealm {
             authorities.addAll(roleKeys);
             authorities.addAll(permissionKeys);
             authorityList = AuthorityUtils.createAuthorityList(authorities.toArray(new String[0]));
+
+            return new LoginUser(user, authorityList);
+
         }catch (Exception e){
-            // 0件例外がスローされた場合は何もしない
-            // それ以外の場合は、認証エラーの例外で包む
-            if(!(e instanceof NoResultException)){
-                throw new UsernameNotFoundException("could not select user,", e);
+
+            if (!(e instanceof UsernameNotFoundException)) {
+                // 入力間違い以外の例外はログ出力する
+                log.error("failed to getLoginUser. ", e);
+                throw e;
             }
+            // 0件例外がスローされた場合は何もしない
+            // それ以外の例外は、認証エラーの例外で包む
+            throw new UsernameNotFoundException("could not select staff.", e);
         }
-        return new LoginUser(user, authorityList);
+
     }
 }
