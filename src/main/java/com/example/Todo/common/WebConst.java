@@ -79,5 +79,11 @@ public interface WebConst {
 
     String STATIC_RESOURCES_URL = "/static/**";
 
+    String CSS_URL = "/css/**";
+
+    String JS_URL = "/js/**";
+
+    String IMAGE_URL = "/image/**";
+
     String API_BASE_URL = "/api/**";
 }

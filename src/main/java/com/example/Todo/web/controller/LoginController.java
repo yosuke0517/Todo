@@ -40,7 +40,7 @@ public class LoginController extends AbstractHtmlController {
 
     @RequestMapping("/")
     public String index(Model model){
-        return "login/success";
+        return "home/success";
     }
 
     /**

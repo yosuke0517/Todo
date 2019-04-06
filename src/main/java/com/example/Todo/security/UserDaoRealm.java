@@ -4,8 +4,10 @@ import com.example.Todo.common.security.BaseRealm;
 import com.example.Todo.domain.dao.UserDao;
 import com.example.Todo.domain.dao.UserRoleDao;
 import com.example.Todo.domain.dto.User;
+import com.example.Todo.domain.dto.UserCriteria;
 import com.example.Todo.domain.dto.UserRole;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -37,11 +39,11 @@ public class UserDaoRealm extends BaseRealm {
         List<GrantedAuthority> authorityList = null;
 
         try{
-            user = new User();
-            user.setEmail(email);
+            val criteria = new UserCriteria();
+            criteria.setEmail(email);
 
             //ユーザを取得して、セッションに保存
-            user = userDao.select(user)
+            user = userDao.select(criteria)
                     .orElseThrow(() -> new UsernameNotFoundException("no user found. [id=]" + email + "]"));
 
 

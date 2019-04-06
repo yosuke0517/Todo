@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layouts/sidebarLayout}">
+<head>
+    <title>Springboot</title>
+</head>
+<body>
+<div layout:fragment="sidebar">
+    <div th:replace="~{layouts/sidebar :: sidebar ('user', 'user')}"></div>
+</div>
+<div th:fragment="content">
+    <h1 th:text="検索（仮）"></h1>
+    <form th:action="">
+
+    </form>
+</div>
+</body>
+</html>

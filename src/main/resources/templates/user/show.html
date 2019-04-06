@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layouts/sidebarLayout}">
+<head>
+    <title>Springboot</title>
+</head>
+<body>
+<div layout:fragment="sidebar">
+    <div th:replace="~{layouts/sidebar :: sidebar ('user', 'user')}"></div>
+</div>
+<div layout:fragment="content">
+    <h1 th:text="ユーザ登録完了（仮）"></h1>
+    <table>
+        <tr th:each="users : ${users}" th:object="${users}">
+            <!--${user}でcontrollerからのリストとバインディング-->
+            <!--th:objectでusersをオブジェクトとして設定し子要素をアスタリスクで指定できる-->
+            <p>id:</p><td th:text="*{id}"></td>
+            <td th:text="*{name}"></td>
+        </tr>
+    </table>
+
+</div>
+</body>
+</html>

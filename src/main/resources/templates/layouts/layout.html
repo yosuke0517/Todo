@@ -1,23 +1,18 @@
-<!--ログイン前の画面で使う予定-->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      lang="ja" class="no-js"><!--<![endif]-->
+      lang="ja" class="no-js">
 <head>
+    <title>layout</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>layout</title>
-    <!--共通で使用するCSS/javascript等を一元管理する-->
     <link th:href="@{/webjars/bootstrap/4.0.0/css/bootstrap.min.css}" rel="stylesheet" />
     <link th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}" rel="stylesheet" type="text/css" />
-    <link th:href="@{/webjars/ionicons/css/ionicons.min.css}" rel="stylesheet" type="text/css"/>
-    <link rel="stylesheet" href="/css/style.css" th:href="@{/css/style.css}" type="text/css"/>
-    <script type="text/javascript" th:src="@{/webjars/jquery/3.1.1/jquery.min.js}"></script>
-    <script type="text/javascript" th:src="@{/webjars/bootstrap/4.0.0/js/bootstrap.min.js}"></script>
-
+    <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" th:href="@{/webjars/ionicons/css/ionicons.min.css}" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="/css/base_style.css" th:href="@{/css/base_style.css}" type="text/css"/>
 </head>
 <body class="skin-purple">
 <div class="container">
@@ -50,6 +45,8 @@
 
 <div layout:fragment="footer" th:remove="tag">
 </div>
+<script type="text/javascript" th:src="@{/webjars/jquery/3.1.1/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/webjars/bootstrap/4.0.0/js/bootstrap.min.js}"></script>
 <div layout:fragment="scripts" th:remove="tag" />
 <form name="logout" th:action="@{/logout}" method="post"></form>
 <script type="text/javascript" th:inline="javascript">

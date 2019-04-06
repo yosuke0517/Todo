@@ -15,12 +15,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @Slf4j
@@ -46,21 +45,21 @@ public class UserController extends BaseController {
     @ModelAttribute("userForm")
     UserForm userForm(){return new UserForm();}
 
-    @RequestMapping("/index")
-    public String index(Model model){
-        List<User> user = userDao.selectAll();
-        //modelへ詰める
-        model.addAttribute("user",user);
-        //templates/user/index.htmlへ遷移
-        return "user/index";
-    }
 
-    @RequestMapping("/new")
+    @GetMapping("/newUser")
     public String newUser(){
-            return "user/new";
+
+        return "user/new";
     }
 
 
+    /**
+     * ユーザ新規作成
+     * @param userForm
+     * @param bindingResult
+     * @param redirectAttributes
+     * @return
+     */
     @RequestMapping("/user/create")
     public String createUser(@Validated @ModelAttribute("userForm") UserForm userForm, BindingResult bindingResult,
                              RedirectAttributes redirectAttributes){
@@ -79,8 +78,37 @@ public class UserController extends BaseController {
             // 登録する
             val createdUser = userService.create(inputUser);
 
-            return "redirect:/index";
+        //ログインしてる場合
+        return "redirect:/show/" + createdUser.getId();
+    }
 
+    /**
+     * 詳細画面
+     *
+     * @param userId
+     * @param model
+     * @return
+     */
+    @GetMapping("/show/{userId}")
+    public String show(@PathVariable Long userId, Model model){
+
+        // 1件取得する
+        val user = userService.findById(userId);
+        model.addAttribute("users", user);
+
+        //画像登録とかはまた今度
+//        if (user.getUploadFile() != null) {
+//            // 添付ファイルを取得する
+//            val uploadFile = user.getUploadFile();
+//
+//            // Base64デコードして解凍する
+//            val base64data = uploadFile.getContent().toBase64();
+//            val sb = new StringBuilder().append("data:image/png;base64,").append(base64data);
+//
+//            model.addAttribute("image", sb.toString());
+//        }
+
+        return "/user/show";
     }
 
 

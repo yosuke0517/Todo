@@ -10,9 +10,4 @@ import java.util.List;
 @Transactional
 /**ユーザ情報を操作するserviceのインターフェース*/
 public interface UserService {
-
-    List<User> selectAll();
-
-
-
 }

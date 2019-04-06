@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.sql.DataSource;
@@ -52,7 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         // 静的ファイルへのアクセスは認証をかけない
         web.ignoring()//
-                .antMatchers(WEBJARS_URL, STATIC_RESOURCES_URL);
+                .antMatchers(WEBJARS_URL, STATIC_RESOURCES_URL,CSS_URL,JS_URL,IMAGE_URL);
     }
 
     /**
@@ -68,19 +69,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
+        // CookieにCSRFトークンを保存する
+        http.csrf()//
+                .csrfTokenRepository(new CookieCsrfTokenRepository());
+
         http.authorizeRequests()
                 .antMatchers("/loginForm").permitAll()
                 .antMatchers("/loginFailure").permitAll()
                 .antMatchers("/user/**").permitAll()
-                .antMatchers("/new").permitAll()//test用(ユーザ登録)
+                .antMatchers("/newUser").permitAll()//test用(ユーザ登録)
                 .antMatchers("/index").permitAll()//test用(ユーザ登録後の遷移画面）
-                .antMatchers("/user/create").permitAll()//test用機能
+//                .antMatchers("/user/create").permitAll()//test用機能
+//                .antMatchers("/user/new").permitAll()//ユーザ作成
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(authenticationEntryPoint())
                 .accessDeniedHandler(accessDeniedHandler());
-
+        //ログイン設定
         http.formLogin()
                 .loginPage("/loginForm")
                 .loginProcessingUrl("/login")

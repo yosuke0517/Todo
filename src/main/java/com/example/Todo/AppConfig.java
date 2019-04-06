@@ -2,6 +2,8 @@ package com.example.Todo;
 
 import com.example.Todo.common.aop.SetAuditInfoInterceptor;
 import com.example.Todo.domain.dto.UserRole;
+import com.example.Todo.domain.dto.common.PageFactory;
+import com.example.Todo.domain.dto.common.PageFactoryImpl;
 import lombok.val;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
@@ -36,6 +38,11 @@ public class AppConfig implements WebServerFactoryCustomizer<ConfigurableServlet
         public SetAuditInfoInterceptor setAuditInfoInterceptor() {
                 // システム制御項目を保存してDB保存時に利用する
                 return new SetAuditInfoInterceptor();
+        }
+
+        @Bean
+        public PageFactory pageFactory() {
+                return new PageFactoryImpl();
         }
 
 
