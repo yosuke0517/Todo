@@ -9,8 +9,6 @@ import org.seasar.doma.SelectType;
 import org.seasar.doma.boot.ConfigAutowireable;
 import org.seasar.doma.jdbc.SelectOptions;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collector;
 
@@ -39,12 +37,20 @@ public interface UserDao {
     Optional<User> select(UserCriteria criteria);
 
     /**
-     * ユーザを1件取得します。
+     * ユーザを1件取得します。(id)
      * @param id
      * @return
      */
     @Select
     Optional<User> selectById(Long id);
+
+    /**
+     * ユーザを1件取得します。(email)
+     * @param email
+     * @return
+     */
+    @Select
+    Optional<User> selectByEmail(String email);
 
     @Insert
     @Transactional

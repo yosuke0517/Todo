@@ -1,7 +1,5 @@
 package com.example.Todo.service;
 
-import com.example.Todo.domain.dao.UserDao;
-import com.example.Todo.domain.dao.UserRoleDao;
 import com.example.Todo.domain.dto.User;
 import com.example.Todo.domain.dto.UserCriteria;
 import com.example.Todo.domain.dto.common.Page;
@@ -12,17 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.List;
-import java.util.Optional;
-
 @Service
 public class UserServiceImpl implements UserService {
-
-    @Autowired
-    UserDao userDao;
-
-    @Autowired
-    UserRoleDao userRoleDao;
 
     @Autowired
     UserRepository userRepository;
@@ -39,7 +28,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * ユーザーを取得します。
+     * ユーザーを取得します。(id)
      *
      * @return
      */
@@ -47,6 +36,12 @@ public class UserServiceImpl implements UserService {
     public User findById(final Long id) {
         Assert.notNull(id, "id must not be null");
         return userRepository.findById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public User findByEmail(final String email){
+        Assert.notNull(email,"email must not be null");
+        return userRepository.findByEmail(email);
     }
 
     /**
@@ -57,7 +52,9 @@ public class UserServiceImpl implements UserService {
      */
     public User create(final User inputUser) {
         Assert.notNull(inputUser, "inputUser must not be null");
-        userDao.insert(inputUser);
+        //なぜかここだけDaoからだったのでRepositoryからに変更20190413
+        //userDao.insert(inputUser);
+        userRepository.create(inputUser);
 
         return inputUser;
     }

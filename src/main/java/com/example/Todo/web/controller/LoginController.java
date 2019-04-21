@@ -2,9 +2,17 @@ package com.example.Todo.web.controller;
 
 import com.example.Todo.common.controller.AbstractHtmlController;
 import com.example.Todo.common.controller.BaseController;
+import com.example.Todo.domain.dto.User;
+import com.example.Todo.security.LoginUser;
+import com.example.Todo.service.UserService;
+import com.example.Todo.service.UserServiceImpl;
 import com.example.Todo.web.form.LoginForm;
+import com.mysql.cj.log.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.Scope;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,6 +28,8 @@ import static com.example.Todo.common.WebConst.*;
 @Controller
 public class LoginController extends AbstractHtmlController {
 
+    @Autowired
+    UserServiceImpl userService;
 
     @Override
     public String getFunctionName() {
@@ -38,10 +48,7 @@ public class LoginController extends AbstractHtmlController {
         return "login/login";
     }
 
-    @RequestMapping("/")
-    public String index(Model model){
-        return "home/success";
-    }
+
 
     /**
      * 入力チェック
@@ -65,11 +72,36 @@ public class LoginController extends AbstractHtmlController {
     /**
      * ログイン成功
      */
+    @Scope("session")
     @PostMapping("/success")
-    public String loginsuccess(@ModelAttribute LoginForm loginForm, RedirectAttributes redirectAttributes){
+    public String loginsuccess(@ModelAttribute LoginForm loginForm, RedirectAttributes redirectAttributes,
+                               SecurityContextHolder securityContextHolder,Model model){
+
+        //メールアドレスをログインIDと見立てる
+        String loginEmail;
+        User user;
+
+        //認証情報の取得
+        ////ナビバーへログインしているユーザのIDを表示させるための認証情報を取得する
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof UserDetails) {
+            loginEmail = ((UserDetails)principal).getUsername();
+        } else {
+            loginEmail = principal.toString();
+        }
+
+        //ユーザのIDを取得する
+        user = userService.findByEmail(loginEmail);
+        Long user_id = user.getId();
+
+        //ユーザのemailをModelに詰める
+        //redirectAttributes.addFlashAttribute("loginEmail",loginEmail);
+        //ログインのグローバルメッセージを詰める
         redirectAttributes.addFlashAttribute(GLOBAL_MESSAGE, getMessage("login.success"));
 
-        return "redirect:/";
+        //マイページへ飛ばす
+        return "redirect:/show/" + user_id;
     }
 
     /**

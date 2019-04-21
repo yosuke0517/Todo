@@ -11,8 +11,59 @@
 <div layout:fragment="sidebar">
     <div th:replace="~{layouts/sidebar :: sidebar ('user', 'user')}"></div>
 </div>
-<div th:fragment="content">
+<div layout:fragment="content">
     <h1 th:text="検索（仮）"></h1>
+    <h3>タスク一覧</h3>
+    <table id="tasks" class="table table-hover" th:if="${tasks} != null">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>件名</th>
+            <th>カテゴリ</th>
+            <th>内容</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="tasks : ${tasks.data}">
+            <!--<td>
+                <a th:href="@{/users/users/show/__${tasks.id}__}" th:text="${tasks.id}" />
+            </td>-->
+            <td th:text="${tasks.id}" />
+            <td th:text="${tasks.subject}" />
+            <td th:text="${tasks.task_category}" />
+            <td th:text="${tasks.details}" />
+        </tr>
+        </tbody>
+    </table>
+    <nav aria-label="ページ送りの実装">
+        <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="#">前へ</a></li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">次へ</a></li>
+        </ul>
+    </nav>
+    <div th:replace="~{fragments/paginator :: paginator (${tasks}, '/task/find')}" />
+    <!--タスク新規作成-->
+    <form th:action = "@{/task/create}" th:object = "${taskForm}" method="post">
+        <div class="box-body">
+            <div class="form-group">
+                <label for="subject" class="control-label">subject</label>
+                <textarea class="form-control" id="subject" rows="1" name="subject"></textarea>
+
+                <label for="task_category" class="control-label">category</label>
+                <textarea class="form-control" id="task_category" rows="1" name="task_category"></textarea>
+
+                <label for="details" class="control-label">Todoを入力</label>
+                <textarea class="form-control" id="details" rows="5" name="details"></textarea>
+            </div>
+        </div>
+        <button class="btn btn-success" type="submit">Task登録</button>
+        <div th:object="${tasks}">
+            <input type="hidden" name="user_id" th:value="*{user_id}" />
+        </div>
+    </form>
     <form th:action="">
 
     </form>

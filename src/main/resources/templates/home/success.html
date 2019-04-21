@@ -11,10 +11,8 @@
     <div th:replace="~{layouts/sidebar :: sidebar ('user', 'user')}"></div>
 </div>
 <div layout:fragment="content">
-    <p>aaa</p>
-    <p>
-        <a href="../user/new" th:href="@{/newUser}">新規登録</a>
-    </p>
+    <p th:text="'Hello, ' + ${loginID}"></p>
+    <p>"/"にパスが設定されているからだよん</p>
 </div>
 
 </body>

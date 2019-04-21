@@ -3,7 +3,9 @@ package com.example.Todo.web.controller;
 import com.example.Todo.common.controller.BaseController;
 import com.example.Todo.domain.dao.UserDao;
 import com.example.Todo.domain.dto.User;
+import com.example.Todo.domain.dto.common.Pageable;
 import com.example.Todo.domain.validation.UserFormValidator;
+import com.example.Todo.service.TaskService;
 import com.example.Todo.service.UserServiceImpl;
 import com.example.Todo.web.form.UserForm;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +40,9 @@ public class UserController extends BaseController {
 
     @Autowired
     UserServiceImpl userService;
+
+    @Autowired
+    TaskService taskService;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -82,6 +87,8 @@ public class UserController extends BaseController {
         return "redirect:/show/" + createdUser.getId();
     }
 
+
+
     /**
      * 詳細画面
      *
@@ -90,11 +97,21 @@ public class UserController extends BaseController {
      * @return
      */
     @GetMapping("/show/{userId}")
-    public String show(@PathVariable Long userId, Model model){
+    public String show(@ModelAttribute("userForm") UserForm userForm,@PathVariable Long userId, Model model){
 
         // 1件取得する
         val user = userService.findById(userId);
-        model.addAttribute("users", user);
+        String email = user.getEmail();
+        model.addAttribute("user", user);
+        model.addAttribute("loginEmail",email);
+
+//        //Todo Task管理のページ別にする？
+//        // 10件区切りで取得する
+//        val page = taskService.findAllTask(userId,userForm);
+//
+//        //val tasks = taskService.findAllTask(userId,pageable);
+//        model.addAttribute("tasks",page);
+
 
         //画像登録とかはまた今度
 //        if (user.getUploadFile() != null) {
@@ -108,9 +125,7 @@ public class UserController extends BaseController {
 //            model.addAttribute("image", sb.toString());
 //        }
 
-        return "/user/show";
+        return "user/show";
     }
-
-
 
 }

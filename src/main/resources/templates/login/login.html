@@ -9,7 +9,9 @@
 </head>
 <body>
 <div layout:fragment="content">
-<h1 th:text="ログイン"></h1>
+<h1 th:text="ログイン情報"></h1>
+    <h3>email:aaa@mail.com</h3>
+    <h3>password:password</h3>
 <div th:if="${param.error}" class="alert alert-danger">
     ユーザー名またはパスワードが正しくありません。
 </div>

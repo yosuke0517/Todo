@@ -12,16 +12,18 @@
     <div th:replace="~{layouts/sidebar :: sidebar ('user', 'user')}"></div>
 </div>
 <div layout:fragment="content">
-    <h1 th:text="ユーザ登録完了（仮）"></h1>
-    <table>
-        <tr th:each="users : ${users}" th:object="${users}">
-            <!--${user}でcontrollerからのリストとバインディング-->
-            <!--th:objectでusersをオブジェクトとして設定し子要素をアスタリスクで指定できる-->
-            <p>id:</p><td th:text="*{id}"></td>
-            <td th:text="*{name}"></td>
-        </tr>
-    </table>
+    <h1 th:text="マイページ（仮）"></h1>
+    <div th:object="${user}">
+        <p th:text="*{id}"></p>
+        <p th:text="*{name}"></p>
+    </div>
+    <!--タスクの一覧を表示する-->
+    <div class="container-fluid">
+        <a href="/new" th:href="@{/task/find}" type="button">タスク</a>
+    </div>
 
+
+    <a class="btn btn-primary" href="/new" th:href="@{/newUser}" role="button">新規登録</a>
 </div>
 </body>
 </html>

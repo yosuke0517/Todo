@@ -75,10 +75,10 @@ CREATE TABLE IF NOT EXISTS role_permissions(
   , KEY idx_role_permissions (role_key, deleted_at)
 ) COMMENT='役割権限紐付け';
 
-CREATE TABLE IF NOT EXISTS todoes(
-  todo_id INT(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'TODO_ID'
+CREATE TABLE IF NOT EXISTS tasks(
+  task_id INT(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Task_ID'
   , user_id INT(11) unsigned NOT NULL COMMENT 'ユーザーID'
-  , todo_category INT(3) NOT NULL COMMENT 'TODOカテゴリ'
+  , task_category INT(3) NOT NULL COMMENT 'Taskカテゴリ'
   , subject VARCHAR(50) NOT NULL COMMENT '件名'
   , details VARCHAR(255) NOT NULL COMMENT '内容'
   , created_by VARCHAR(50) NOT NULL COMMENT '登録者'
@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS todoes(
   , deleted_by VARCHAR(50) DEFAULT NULL COMMENT '削除者'
   , deleted_at DATETIME DEFAULT NULL COMMENT '削除日時'
   , version INT(11) unsigned NOT NULL DEFAULT 1 COMMENT '改訂番号'
-  , PRIMARY KEY (todo_id)
-  , KEY idx_todo (todo_category, deleted_at)
-) COMMENT='TODO';
+  , PRIMARY KEY (task_id)
+  , KEY idx_task (task_category, deleted_at)
+) COMMENT='Task';
 
